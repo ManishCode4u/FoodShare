@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -40,7 +40,7 @@ const NgoDashboard = () => {
 
     const fetchDonations = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/donations');
+            const res = await api.get('/api/donations');
             setDonations(res.data.filter(d => d.status === 'available'));
         } catch (err) {
             console.error(err);
@@ -50,7 +50,7 @@ const NgoDashboard = () => {
     const handleClaim = async (id) => {
         if (!confirm("Are you sure you want to claim this donation?")) return;
         try {
-            await axios.post(`http://localhost:5000/api/donations/${id}/claim`, { ngoId: user._id });
+            await api.post(`/api/donations/${id}/claim`, { ngoId: user._id });
             alert('Donation Claimed!');
             fetchDonations(); // Refresh list
         } catch (err) {

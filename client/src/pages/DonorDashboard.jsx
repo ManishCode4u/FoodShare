@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import { PlusCircle, Clock, Weight, CheckCircle } from 'lucide-react';
 
@@ -13,7 +13,7 @@ const DonorDashboard = () => {
     useEffect(() => {
         const fetchDonations = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/donations');
+                const res = await api.get('/api/donations');
                 // Filter client side for simplicity, ideally server filter
                 setDonations(res.data.filter(d => d.donorId === user._id));
             } catch (err) {
@@ -28,7 +28,7 @@ const DonorDashboard = () => {
     const handleDonate = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:5000/api/donations', {
+            const res = await api.post('/api/donations', {
                 ...formData,
                 donorId: user._id,
                 location: user.location // User's location
@@ -44,7 +44,7 @@ const DonorDashboard = () => {
     const handleComplete = async (id) => {
         if (!confirm("Confirm successful pickup?")) return;
         try {
-            const res = await axios.post(`http://localhost:5000/api/donations/${id}/complete`);
+            const res = await api.post(`/api/donations/${id}/complete`);
             setDonations(donations.map(d => d._id === id ? res.data.donation : d));
             refreshUser(); // Update credits
             alert('Pickup Confirmed! Credits Earned.');

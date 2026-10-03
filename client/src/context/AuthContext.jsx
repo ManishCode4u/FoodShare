@@ -1,6 +1,6 @@
 
 import { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 const AuthContext = createContext();
 
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+            const res = await api.post('/api/auth/login', { email, password });
             if (res.data.success) {
                 sessionStorage.setItem('fs_token', res.data.token);
                 sessionStorage.setItem('fs_user', JSON.stringify(res.data.user));
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
 
     const signup = async (userData) => {
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/signup', userData);
+            const res = await api.post('/api/auth/signup', userData);
             if (res.data.success) {
                 sessionStorage.setItem('fs_token', res.data.token);
                 sessionStorage.setItem('fs_user', JSON.stringify(res.data.user));
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
     const refreshUser = async () => {
         if (!user) return;
         try {
-            const res = await axios.get(`http://localhost:5000/api/users/${user._id}`);
+            const res = await api.get(`/api/users/${user._id}`);
             if (res.data) {
                 sessionStorage.setItem('fs_user', JSON.stringify(res.data));
                 setUser(res.data);

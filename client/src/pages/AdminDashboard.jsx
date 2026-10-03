@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState({ users: 0, donations: 0, openComplaints: 0, complaints: [], usersList: [] });
@@ -12,7 +12,7 @@ const AdminDashboard = () => {
 
     const fetchStats = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/admin/stats');
+            const res = await api.get('/api/admin/stats');
             setStats(res.data);
             setLoading(false);
         } catch (err) {
@@ -22,7 +22,7 @@ const AdminDashboard = () => {
 
     const resolveComplaint = async (id) => {
         try {
-            await axios.post(`http://localhost:5000/api/admin/complaints/${id}/resolve`);
+            await api.post(`/api/admin/complaints/${id}/resolve`);
             fetchStats();
         } catch (err) {
             console.error(err);
